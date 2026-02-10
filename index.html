@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SBI Clerk Mock - Progress Report Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SBI Clerk Mock - Realme Optimized</title>
     <style>
         :root {
             --header-bg: #2c3e50;
@@ -14,107 +14,151 @@
             --border: #dcdfe3;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f7f6; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        header { background: var(--header-bg); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
-        #btn-toggle-pal { display: none; background: #445566; color: white; border: 1px solid #556677; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
-
-        @media (max-width: 1024px) {
-            #btn-toggle-pal { display: block; }
-            .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 300px; z-index: 2000; transform: translateX(100%); transition: 0.3s; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.2); }
-            .sidebar.open { transform: translateX(0); }
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; 
+            background: #fff; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
         }
 
+        header { 
+            background: var(--header-bg); 
+            color: white; 
+            padding: 0 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            min-height: 50px;
+        }
+
+        #timer { font-weight: bold; font-family: monospace; font-size: 1.1rem; }
+
+        /* Mobile First Layout */
+        .container { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            position: relative; 
+        }
+
+        .q-window { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            width: 100%;
+        }
+
+        /* Sidebar as Drawer for Mobile */
+        .sidebar { 
+            position: fixed; 
+            right: 0; top: 0; bottom: 0; 
+            width: 80%; 
+            max-width: 300px; 
+            background: white; 
+            z-index: 2000; 
+            transform: translateX(100%); 
+            transition: transform 0.3s ease; 
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open { transform: translateX(0); }
+
+        /* Desktop Adjustments */
         @media (min-width: 1025px) {
-            .container { display: grid !important; grid-template-columns: 1fr 320px; }
-            .sidebar { border-left: 1px solid var(--border); background: white; }
+            .container { display: grid; grid-template-columns: 1fr 320px; }
+            .sidebar { position: relative; transform: none; box-shadow: none; border-left: 1px solid var(--border); }
+            #btn-toggle-pal { display: none; }
         }
 
-        .container { display: none; flex: 1; overflow: hidden; }
-        .q-window { background: white; padding: 30px; overflow-y: auto; }
-        .sidebar { padding: 20px; display: flex; flex-direction: column; }
-        
-        .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px; }
-        .num-box { height: 40px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; }
+        .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 15px; }
+        .num-box { 
+            height: 35px; border: 1px solid #ccc; display: flex; 
+            align-items: center; justify-content: center; border-radius: 4px; font-size: 12px;
+        }
         .num-box.active { border: 2px solid var(--primary-blue); font-weight: bold; }
         .num-box.answered { background: var(--success-green); color: white; border: none; }
         .num-box.review { background: var(--review-purple); color: white; border-radius: 50%; }
 
-        .option { padding: 15px; border: 1px solid var(--border); margin-bottom: 10px; border-radius: 8px; cursor: pointer; }
+        .option { 
+            padding: 12px; border: 1px solid var(--border); 
+            margin-bottom: 8px; border-radius: 8px; font-size: 14px;
+        }
         .option.selected { background: #e8f0fe; border-color: var(--primary-blue); font-weight: bold; }
 
-        footer { background: white; border-top: 1px solid var(--border); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-nav { padding: 10px 20px; border: 1px solid var(--border); background: white; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        footer { 
+            background: #fff; border-top: 1px solid var(--border); 
+            padding: 8px; display: flex; justify-content: space-between; gap: 5px;
+        }
+
+        .btn-nav { 
+            flex: 1; padding: 10px 2px; border: 1px solid var(--border); 
+            background: white; border-radius: 4px; font-weight: bold; 
+            font-size: 10px; text-transform: uppercase; text-align: center;
+        }
         .btn-primary { background: var(--primary-blue); color: white; border: none; }
         .btn-danger { background: var(--danger-red); color: white; border: none; }
 
-        /* Report Styles */
-        #results { display: none; padding: 40px; background: white; height: 100vh; overflow-y: auto; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin: 30px 0; }
-        .stat-card { padding: 20px; border-radius: 10px; background: #f8f9fa; border: 1px solid var(--border); }
-        .stat-card h3 { margin: 0; font-size: 2rem; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left; }
-        th, td { border: 1px solid var(--border); padding: 12px; }
-        th { background: #eee; }
+        /* Report Screen */
+        #results { display: none; padding: 20px; overflow-y: auto; text-align: center; flex: 1; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
     </style>
 </head>
 <body>
 
-    <div id="landing" style="position:fixed; inset:0; background:white; z-index:3000; display:flex; justify-content:center; align-items:center;">
-        <button class="btn-primary" style="padding:20px 40px; font-size:1.5rem; border-radius:10px; cursor:pointer;" onclick="initTest()">Start Exam</button>
+    <div id="landing" style="position:fixed; inset:0; background:white; z-index:3000; display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 20px;">
+        <h2 style="text-align:center">SBI Clerk Quant Mock</h2>
+        <p>35 Questions | 20 Minutes</p>
+        <button class="btn-primary" style="padding:15px 30px; border-radius:8px; width:100%; max-width:250px" onclick="initTest()">START TEST</button>
     </div>
 
     <header>
-        <button id="btn-toggle-pal" onclick="toggleSidebar()">☰ Questions</button>
-        <span>SBI CLERK MOCK</span>
-        <div id="timer" style="font-weight:bold; font-size:1.2rem;">20:00</div>
+        <button id="btn-toggle-pal" onclick="toggleSidebar()" style="background:none; border:1px solid #fff; color:white; padding:5px 10px; border-radius:4px;">PALETTE</button>
+        <div id="timer">20:00</div>
     </header>
 
-    <div class="container" id="test-main">
+    <div class="container" id="test-main" style="display:none">
         <div class="q-window">
-            <h3 id="q-id">Question 1</h3>
-            <div id="q-text" style="font-size: 1.2rem; margin-bottom: 25px; line-height: 1.5;"></div>
+            <h4 id="q-id" style="margin:0 0 10px 0; color:var(--primary-blue)">Question 1</h4>
+            <div id="q-text" style="margin-bottom:20px; line-height:1.4; font-weight:500;"></div>
             <div id="options-group"></div>
         </div>
 
         <div class="sidebar" id="sidebar">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h4 style="margin:0">Question Palette</h4>
-                <button onclick="toggleSidebar()" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">CLOSE ×</button>
+                <strong>Questions</strong>
+                <button onclick="toggleSidebar()" style="border:none; color:red; background:none; font-weight:bold;">[X]</button>
             </div>
             <div class="palette" id="palette"></div>
         </div>
     </div>
 
     <footer id="footer-nav" style="display:none">
-        <div>
-            <button class="btn-nav" onclick="changeQ(-1)">PREVIOUS</button>
-            <button class="btn-nav" style="background:var(--review-purple); color:white; border:none;" onclick="markReview()">REVIEW</button>
-        </div>
-        <div>
-            <button class="btn-nav btn-danger" onclick="submitTest()">SUBMIT TEST</button>
-            <button class="btn-nav btn-primary" onclick="saveNext()">SAVE & NEXT</button>
-        </div>
+        <button class="btn-nav" onclick="changeQ(-1)">PREV</button>
+        <button class="btn-nav" style="background:var(--review-purple); color:white;" onclick="markReview()">REVIEW</button>
+        <button class="btn-nav btn-danger" onclick="submitTest()">SUBMIT</button>
+        <button class="btn-nav btn-primary" onclick="saveNext()">SAVE & NEXT</button>
     </footer>
 
     <div id="results">
-        <h1 style="color:var(--header-bg)">Exam Progress Report</h1>
-        <div class="stats-grid">
-            <div class="stat-card"><h3>35</h3><p>Total</p></div>
-            <div class="stat-card" style="color:var(--success-green)"><h3 id="stat-correct">0</h3><p>Correct</p></div>
-            <div class="stat-card" style="color:var(--danger-red)"><h3 id="stat-wrong">0</h3><p>Wrong</p></div>
-            <div class="stat-card" style="color:#777"><h3 id="stat-skipped">0</h3><p>Skipped</p></div>
-        </div>
-        <h2 id="final-score" style="background:var(--primary-blue); color:white; padding:15px; border-radius:8px;"></h2>
-        <table>
-            <thead><tr><th>Q.No</th><th>Result</th><th>Correct Answer</th><th>Your Answer</th></tr></thead>
+        <h3>Performance Report</h3>
+        <div id="score-summary" style="margin-bottom:20px; font-weight:bold;"></div>
+        <table id="res-table">
+            <thead><tr><th>#</th><th>Res</th><th>Correct</th></tr></thead>
             <tbody id="res-body"></tbody>
         </table>
-        <button class="btn-nav btn-primary" style="margin-top:30px; padding:15px 40px;" onclick="location.reload()">Restart Mock</button>
+        <button class="btn-primary" style="margin-top:20px; padding:10px 20px;" onclick="location.reload()">RETRY</button>
     </div>
 
 <script>
-    // Paste the 35 Questions Array here
     const questions = [
         { text: "75% of 480 + 25% of 320 = ?", options: ["420", "440", "460", "400", "450"], correct: 1 },
         { text: "√(1024) + √(576) = ? + 20", options: ["32", "36", "40", "28", "42"], correct: 1 },
@@ -157,8 +201,7 @@
     let answers = new Array(questions.length).fill(null);
     let status = new Array(questions.length).fill('unvisited');
     let timeLeft = 20 * 60;
-
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    let timerInterval;
 
     function initTest() {
         document.getElementById('landing').style.display = 'none';
@@ -168,6 +211,8 @@
         showQuestion();
         startTimer();
     }
+
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
     function renderPalette() {
         const pal = document.getElementById('palette');
@@ -223,8 +268,8 @@
     }
 
     function startTimer() {
-        const timerObj = setInterval(() => {
-            if(timeLeft <= 0) { clearInterval(timerObj); submitTest(); return; }
+        timerInterval = setInterval(() => {
+            if(timeLeft <= 0) { clearInterval(timerInterval); submitTest(); return; }
             timeLeft--;
             let m = Math.floor(timeLeft/60), s = timeLeft%60;
             document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
@@ -232,54 +277,29 @@
     }
 
     function submitTest() {
-    if(!confirm("Are you sure you want to end the test and see your progress report?")) return;
-    
-    document.getElementById('test-main').style.display = 'none';
-    document.getElementById('footer-nav').style.display = 'none';
-    document.getElementById('results').style.display = 'block';
+        if(timeLeft > 0 && !confirm("Submit Test?")) return;
+        clearInterval(timerInterval);
+        document.getElementById('test-main').style.display = 'none';
+        document.getElementById('footer-nav').style.display = 'none';
+        document.getElementById('results').style.display = 'block';
 
-    let correctCount = 0, wrongCount = 0, skippedCount = 0;
-    const resBody = document.getElementById('res-body');
-    resBody.innerHTML = '';
+        let correct = 0, wrong = 0;
+        const resBody = document.getElementById('res-body');
+        resBody.innerHTML = '';
 
-    questions.forEach((q, i) => {
-        let rowStatus = "";
-        if (answers[i] === null) {
-            rowStatus = "SKIPPED";
-            skippedCount++;
-        } else if (answers[i] === q.correct) {
-            rowStatus = "CORRECT";
-            correctCount++;
-        } else {
-            rowStatus = "WRONG";
-            wrongCount++;
-        }
+        questions.forEach((q, i) => {
+            let rowRes = "SKIP";
+            let color = "gray";
+            if (answers[i] !== null) {
+                if (answers[i] === q.correct) { correct++; rowRes = "CORR"; color = "green"; }
+                else { wrong++; rowRes = "WRNG"; color = "red"; }
+            }
+            resBody.innerHTML += `<tr><td>${i+1}</td><td style="color:${color}">${rowRes}</td><td>${q.options[q.correct]}</td></tr>`;
+        });
 
-        resBody.innerHTML += `
-            <tr>
-                <td>${i+1}</td>
-                <td style="font-weight:bold; color:${rowStatus === 'CORRECT' ? 'green' : (rowStatus === 'WRONG' ? 'red' : 'gray')}">${rowStatus}</td>
-                <td>${q.options[q.correct]}</td>
-                <td>${answers[i] !== null ? q.options[answers[i]] : 'N/A'}</td>
-            </tr>`;
-    });
-
-    // --- Negative Marking Calculation ---
-    let negativeMarks = wrongCount * 0.25;
-    let finalScore = correctCount - negativeMarks;
-
-    document.getElementById('stat-correct').innerText = correctCount;
-    document.getElementById('stat-wrong').innerText = wrongCount;
-    document.getElementById('stat-skipped').innerText = skippedCount;
-    
-    // Displaying the breakdown for transparency
-    document.getElementById('final-score').innerHTML = `
-        Final Score: ${finalScore.toFixed(2)} / 35 <br>
-        <small style="font-size: 0.9rem; font-weight: normal;">
-            (Correct: ${correctCount} | Penalty: -${negativeMarks.toFixed(2)})
-        </small>
-    `;
-}
+        let finalScore = (correct - (wrong * 0.25)).toFixed(2);
+        document.getElementById('score-summary').innerHTML = `Score: ${finalScore} <br> (C: ${correct}, W: ${wrong}, P: -${(wrong*0.25).toFixed(2)})`;
+    }
 </script>
 </body>
 </html>
